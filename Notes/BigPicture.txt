@@ -172,3 +172,25 @@ Asset Pipeline
 
     Combines and compresses into one app style sheet
     
+    Example:
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Demo Site</title>
+            <%= csrf_meta_tags %>
+            <%= csp_meta_tag %>
+
+            <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'%>
+            <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+        </head>
+
+    app/assets/stylesheets/application.css
+    
+        *= require_tree .
+        *= require_self
+    
+    Rails generates a fingerprint when combining the stylesheets
+        Therefore, your browser will always show the latest version of your CSS
+        The combined CSS includes comments that provide debugging info
+
+    
