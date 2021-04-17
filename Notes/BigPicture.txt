@@ -1,0 +1,196 @@
+Rails is a framework of frameworks
+    Active Record
+    Action Pack
+    Action View
+    Active Support
+    Railties
+
+Active Record
+    The model part of MVC, which deals with ORM
+Action View
+    The view part of MVC, which deals with templates
+Action Pack
+    The controller part of MVC
+
+Action Pack
+    Define routes
+    Retrieves data from models and passes it to a template
+    Can also respond with JSON and XML
+    Provides helpers for URL routes and more
+
+config/routes.rb
+    Rails generates an empty routes.rb file
+    Define what resources will be accessible
+
+    Example 1:
+        Rails.application.routes.draw do
+
+            # The first parameter defines the URL path
+            # /learn
+            # The second paramter defines a redirect to another site when the user goes to /learn
+            get "learn", to: redirect("https://www.amazon.com")
+
+            # /people
+            # The controller is people
+            # The method (action) is index
+            get "people", to: "people#index"
+
+        end
+
+        class PeopleController < ApplicationController
+            def index
+            end
+        end
+
+    Example 2:
+
+        Rails.application.routes.draw to
+            # The collection resource name is people
+            # Rails will handle almost any path we need
+            resources :people
+        end
+
+        What is created by "resouces :people"?
+            GET     /people(.:format)           people#index
+            POST    /people(.:format)           people#create
+            GET     /people/new(.:format)       people#new
+            GET     /people/:id/edit(.:format)  people#edit
+            GET     /people/:id(.:format)       people#show
+            PATCH   /people/:id(.:format)       people#update
+            PUT     /people/:id(.:format)       people#update
+            DELETE  /people/:id(.:format)       people#destroy
+
+CRUD in Rails
+
+    Example:
+
+        class PeopleController < ApplicationController
+            def create #CREATE
+            end
+
+            def show #READ
+            end
+
+            def update #UPDATE
+            end
+
+            def destroy #DELETE
+            end
+        end
+
+Active Record is the Rails ORM
+
+    Validations
+        #Adding validations to the name and email attributes
+        #Both name and email are required
+        class Person < ApplicationRecord
+            validates :name, :email, presence: true
+        end
+
+    Callbacks
+        #Callbacks are available before and after model operations
+        #These callbacks are available for CREATE, UPDATE, and DESTROY
+        class Person < ApplicationRecord
+            after_create :send_welcome_email
+
+            def send_welcome_email
+                puts "Pretending to email #{email}"
+            end
+        end
+
+Action View
+
+    #Any instance variable assigned within a Rails controller becomes available to the view
+    #This is unique to the Rails framework
+    #Rails copies instance variables declared within a controller action (method) to the respective view context
+    class PeopleController < ApplicationController
+        def index
+            @people = Person.all
+        end
+    end
+
+    How to get access to the submitted form data?
+
+        class PeopleController < ApplicationController
+            def create
+                @person = Person.new(person_params)
+                @person.save #validations run when save is called
+            end
+
+            private
+            #Use params to access the form data
+            #Rails uses a secure system to only permit the attributes you expect to receive from the browser
+            #params is similar to a Ruby hash or JS object with keys and values
+            def person_params
+                params.require(:person).permit(:email, :name)
+            end
+        end
+
+    Templates
+
+        ERB = Embedded Ruby
+        Use "<%= %>" to print the output of the Ruby code
+
+        <p>
+            <strong>Name:%nbsp;</strong>{%= @person.name %}
+            <strong>Email:%nbsp;</strong>{%= @person.email %}
+        </p>
+        <%= link_to 'Edit', edit_person_path(@person) %>
+        <%= link_to 'Back', people_path %>
+
+        Use "<% %>" to run without printing the output of the Ruby code
+
+        <h1>People</h1>
+        <ul>
+            <% @people.each do |person| %>
+                <%= person.name %>
+            <% end %>
+        </ul>
+
+Security
+
+    csrf_meta_tags
+        CSRF token
+        Enables request forgery protection against malicious scripts which can pretend to submit form data on your behalf
+    csp_meta_tag
+        Content Security Policy
+        Supports security policy settings to protect app against malicious JS
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Demo Site</title>
+        <%= csrf_meta_tags %>
+        <%= csp_meta_tag %>
+    </head>
+    <body>
+        <%= yield %>
+    </body>
+    </html>
+
+Asset Pipeline
+
+    Combines and compresses into one app style sheet
+    
+    Example:
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Demo Site</title>
+            <%= csrf_meta_tags %>
+            <%= csp_meta_tag %>
+
+            <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'%>
+            <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+        </head>
+
+    app/assets/stylesheets/application.css
+    
+        *= require_tree .
+        *= require_self
+    
+    Rails generates a fingerprint when combining the stylesheets
+        Therefore, your browser will always show the latest version of your CSS
+        The combined CSS includes comments that provide debugging info
+
+    
