@@ -1,0 +1,49 @@
+1) Create a new VM in Hyper-V using the Ubuntu 20 iso
+
+2) RDP Setup
+
+sudo apt update
+sudo apt install xrdp
+sudo systemctl status xrdp
+sudo adduser xrdp ssl-cert
+sudo systemctl restart xrdp
+sudo ufw allow 3389
+
+3) Install VS Code
+
+snap install --classic code
+
+4) Install Ruby
+
+apt-get install ruby-full
+
+5) Install Dependencies
+
+apt install ruby-dev
+apt install gcc
+apt install libffi-dev
+apt install make
+
+6) Install Other Dependencies
+
+apt install nodejs
+npm install --global yarn
+apt-get install sqlite3 libsqlite3-dev
+
+7) Install Rails
+
+gem install rails
+apt install ruby-railties
+
+8) Install Bundler
+
+apt install ruby-bundler
+bundle install
+
+9) Create Rails app
+
+rails new <app-name>
+
+10) Run Rails app
+
+bin/rails server
