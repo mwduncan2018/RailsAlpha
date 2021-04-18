@@ -27,6 +27,8 @@ apt install make
 6) Install Other Dependencies
 
 apt install nodejs
+apt install npm
+apt install cmdtest #yarn
 npm install --global yarn
 apt-get install sqlite3 libsqlite3-dev
 
@@ -38,12 +40,15 @@ apt install ruby-railties
 8) Install Bundler
 
 apt install ruby-bundler
-bundle install
 
 9) Create Rails app
 
 rails new <app-name>
+cd <app-name>
+bundle install
 
 10) Run Rails app
 
 bin/rails server
+
+*** These instructions are missing something ***
